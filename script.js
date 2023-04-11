@@ -9,9 +9,7 @@ submitButton.addEventListener('click', function(event) {
     fetch(`https://www.habbo.com/api/public/users?name=${userName}`)
       .then(response => response.json())
       .then(data => {
-        // Check if the user is online
         if (data.online) {
-          // Send a notification if the user is online
           if (Notification.permission === "granted") {
             new Notification(`User ${userName} is online!`);
           } else if (Notification.permission !== "denied") {
