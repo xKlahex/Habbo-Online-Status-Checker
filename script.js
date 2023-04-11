@@ -1,15 +1,10 @@
 
 const submitButton = document.getElementById('submitButton');
-
-
 submitButton.addEventListener('click', function(event) {
 
   event.preventDefault();
-  
-
   const userName = document.getElementById('userName').value;
   
-
   function checkOnlineStatus() {
     fetch(`https://www.habbo.com/api/public/users?name=${userName}`)
       .then(response => response.json())
@@ -31,6 +26,5 @@ submitButton.addEventListener('click', function(event) {
       .catch(error => console.error(error));
   }
   
-  // Call the checkOnlineStatus function every 5 minutes
   setInterval(checkOnlineStatus, 1500);
 });
