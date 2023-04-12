@@ -57,7 +57,6 @@ function showStatus(message, status) {
 	form.appendChild(statusDiv);
 }
 
-// Get the saved usernames from cookies
 function getSavedUsernames() {
 	const cookieValue = document.cookie
 		.split('; ')
@@ -66,12 +65,12 @@ function getSavedUsernames() {
 	return cookieValue ? cookieValue.split(',') : [];
 }
 
-// Save the usernames to cookies
+
 function saveUsernamesToCookie(usernames) {
 	document.cookie = `savedUsernames=${usernames.join(',')}`;
 }
 
-// Watch for all saved usernames
+
 function watchSavedUsernames() {
 	const savedUsernames = getSavedUsernames();
 	savedUsernames.forEach(username => {
@@ -91,17 +90,17 @@ function watchSavedUsernames() {
 	});
 }
 
-// Watch for saved usernames every 15 seconds
+
 setInterval(() => {
 	watchSavedUsernames();
 }, 15000);
 
-// Watch for saved usernames when the page loads
+
 window.onload = function() {
 	watchSavedUsernames();
 }
 
-// Save usernames on form submit
+
 form.addEventListener('submit', (event) => {
 	event.preventDefault();
 	const habboName = input.value.trim();
