@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +12,7 @@
 		<form id="habbo-form">
 			<input type="text" id="habbo-name" name="habbo-name" placeholder="Enter name here">
 			<button type="submit">Check Status</button>
-<button type="button" id="clear-names">Clear Names</button>
+<button type="button" id="clear-habbo-names">Clear Names</button>
 
 		</form>
 	</div>
@@ -21,12 +22,12 @@
 	</audio>
 
 	<script>
-const clearNamesBtn = document.getElementById('clear-names');
+const clearNamesBtn = document.getElementById('clear-habbo-names');
 clearNamesBtn.addEventListener('click', (event) => {
-    // clear cookies
-    document.cookie = "names=";
-    // clear input field
-    input.value = "";
+    // clear localStorage
+    localStorage.removeItem('habboNames');
+    // clear savedNames array
+    savedNames = [];
     // remove all status messages
     const statusDivs = document.querySelectorAll('.status-message');
     statusDivs.forEach((div) => div.remove());
@@ -164,7 +165,7 @@ clearNamesBtn.addEventListener('click', (event) => {
         margin-top: 20px;
         padding: 10px;
     }
-#clear-names {
+#clear-habbo-names {
     margin-top: 10px;
     padding: 10px 20px;
     background-color: #f44336;
