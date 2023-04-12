@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +24,6 @@
 		const sound = document.getElementById('notification-sound');
 		let savedNames = [];
 
-		// Check all saved Habbo names on page load
 		window.addEventListener('load', () => {
 			if (localStorage.getItem('habboNames')) {
 				savedNames = JSON.parse(localStorage.getItem('habboNames'));
@@ -34,7 +34,6 @@
 			setTimeout(startInterval, 15000);
 		});
 
-		// Add new Habbo name to saved names list
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
 			const habboName = input.value.trim();
@@ -46,7 +45,7 @@
 			input.value = '';
 		});
 
-		// Check status of a Habbo name
+
 		function checkStatus(habboName) {
 			fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
 				.then(response => response.json())
@@ -63,7 +62,6 @@
 				});
 		}
 
-		// Check status of all saved Habbo names at regular intervals
 		function startInterval() {
 			setInterval(() => {
 				savedNames.forEach(habboName => {
@@ -72,7 +70,6 @@
 			}, 15000);
 		}
 
-		// Show the status of a Habbo name in the form
 		function showStatus(message, status) {
 			const statusDiv = document.createElement('div');
 			statusDiv.textContent = message;
