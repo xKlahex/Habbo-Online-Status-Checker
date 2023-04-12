@@ -76,11 +76,14 @@ function watchSavedUsernames() {
 		fetch(`https://www.habbo.com/api/public/users?name=${username}`)
 			.then(response => response.json())
 			.then(data => {
-				if (data.online) {
+				const previousStatus = localStorage.getItem(`${username}-status`);
+				if (data.online && previousStatus !== 'online') {
 					showStatus(`${username} is online!`, 'online');
 					sound.play();
-				} else {
+					localStorage.setItem(`${username}-status`, 'online');
+				} else if (!data.online && previousStatus !== 'offline') {
 					showStatus(`${username} is offline.`, 'offline');
+					localStorage.setItem(`${username}-status`, 'offline');
 				}
 			})
 			.catch(error => {
