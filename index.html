@@ -21,12 +21,33 @@
 		const form = document.getElementById('habbo-form');
 		const input = document.getElementById('habbo-name');
 		const sound = document.getElementById('notification-sound');
+		let savedNames = [];
 
+		// Check all saved Habbo names on page load
+		window.addEventListener('load', () => {
+			if (localStorage.getItem('habboNames')) {
+				savedNames = JSON.parse(localStorage.getItem('habboNames'));
+				savedNames.forEach(habboName => {
+					checkStatus(habboName);
+				});
+			}
+			setTimeout(startInterval, 15000);
+		});
+
+		// Add new Habbo name to saved names list
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
+			const habboName = input.value.trim();
+			if (habboName !== '' && !savedNames.includes(habboName)) {
+				savedNames.push(habboName);
+				localStorage.setItem('habboNames', JSON.stringify(savedNames));
+				checkStatus(habboName);
+			}
+			input.value = '';
+		});
 
-			const habboName = input.value;
-
+		// Check status of a Habbo name
+		function checkStatus(habboName) {
 			fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
 				.then(response => response.json())
 				.then(data => {
@@ -40,39 +61,18 @@
 				.catch(error => {
 					showStatus(`An error occurred while checking status. Please try again.`, 'error');
 				});
+		}
 
-			// Store the habboName in a cookie
-			const cookieName = 'trackedHabboNames';
-			let trackedNames = [];
-			if (document.cookie.split(';').some((item) => item.trim().startsWith(cookieName + '='))) {
-				trackedNames = JSON.parse(getCookie(cookieName));
-			}
-			if (!trackedNames.includes(habboName)) {
-				trackedNames.push(habboName);
-			}
-			document.cookie = `${cookieName}=${JSON.stringify(trackedNames)}`;
-		});
+		// Check status of all saved Habbo names at regular intervals
+		function startInterval() {
+			setInterval(() => {
+				savedNames.forEach(habboName => {
+					checkStatus(habboName);
+				});
+			}, 15000);
+		}
 
-		setInterval(() => {
-			const trackedNames = JSON.parse(getCookie('trackedHabboNames'));
-
-			trackedNames.forEach((habboName) => {
-				fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
-					.then(response => response.json())
-					.then(data => {
-						if (data.online) {
-							showStatus(`${habboName} is online!`, 'online');
-							sound.play();
-						} else {
-							showStatus(`${habboName} is offline.`, 'offline');
-						}
-					})
-					.catch(error => {
-						showStatus(`An error occurred while checking status. Please try again.`, 'error');
-					});
-			});
-		}, 15000);
-
+		// Show the status of a Habbo name in the form
 		function showStatus(message, status) {
 			const statusDiv = document.createElement('div');
 			statusDiv.textContent = message;
@@ -84,14 +84,6 @@
 			}
 
 			form.appendChild(statusDiv);
-		}
-
-		function getCookie(name) {
-			const value = `; ${document.cookie}`;
-			const parts = value.split(`; ${name}=`);
-			if (parts.length === 2) {
-				return parts.pop().split(';').shift();
-			}
 		}
 	</script>
 
