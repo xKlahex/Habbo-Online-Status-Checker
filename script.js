@@ -39,7 +39,8 @@ Object.values(cookies.habboUsers.split(',')).forEach(habboName => {
 				showStatus(`${habboName} is offline.`, 'offline');
 			}
 		}).catch(error => {
-	showStatus(`An error occurred while checking status. Please try again.`, 'error');
+			showStatus(`An error occurred while checking status. Please try again.`, 'error');
+		});
 });
 
 function showStatus(message, status) {
@@ -65,11 +66,9 @@ function getSavedUsernames() {
 	return cookieValue ? cookieValue.split(',') : [];
 }
 
-
 function saveUsernamesToCookie(usernames) {
 	document.cookie = `savedUsernames=${usernames.join(',')}`;
 }
-
 
 function watchSavedUsernames() {
 	const savedUsernames = getSavedUsernames();
@@ -90,6 +89,12 @@ function watchSavedUsernames() {
 	});
 }
 
+function clearSavedUsernames() {
+	saveUsernamesToCookie([]);
+	while (form.lastElementChild) {
+		form.removeChild(form.lastElementChild);
+	}
+}
 
 setInterval(() => {
 	watchSavedUsernames();
