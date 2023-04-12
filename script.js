@@ -1,144 +1,95 @@
+const clearNamesBtn = document.getElementById('clear-habbo-names');
+clearNamesBtn.addEventListener('click', (event) => {
+  // clear localStorage
+  localStorage.removeItem('habboNames');
+  // clear savedNames array
+  savedNames = [];
+  // remove all status messages
+  const statusDivs = document.querySelectorAll('.status-message');
+  statusDivs.forEach((div) => div.remove());
+  // update names container
+  updateNamesContainer();
+  // reload page after 0.5 seconds
+  setTimeout(() => {
+    location.reload();
+  }, 100);
+});
+
 const form = document.getElementById('habbo-form');
 const input = document.getElementById('habbo-name');
 const sound = document.getElementById('notification-sound');
-const cookies = document.cookie.split(';').map(cookie => cookie.trim().split('=')).reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+let savedNames = [];
+
+window.addEventListener('load', () => {
+  if (localStorage.getItem('habboNames')) {
+    savedNames = JSON.parse(localStorage.getItem('habboNames'));
+    savedNames.forEach(habboName => {
+      checkStatus(habboName);
+    });
+    updateNamesContainer();
+  }
+  setTimeout(startInterval, 15000);
+});
 
 form.addEventListener('submit', (event) => {
-	event.preventDefault();
-
-	const habboName = input.value;
-	const cookieName = 'habboUsers';
-	const cookieValue = cookies[cookieName] ? `${cookies[cookieName]},${habboName}` : habboName;
-
-	fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
-		.then(response => response.json())
-		.then(data => {
-			if (data.online) {
-				showStatus(`${habboName} is online!`, 'online');
-				sound.play();
-			} else {
-				showStatus(`${habboName} is offline.`, 'offline');
-			}
-		})
-		.catch(error => {
-			showStatus(`An error occurred while checking status. Please try again.`, 'error');
-		})
-		.finally(() => {
-			document.cookie = `${cookieName}=${cookieValue}`;
-			input.value = '';
-		});
+  event.preventDefault();
+  const habboName = input.value.trim();
+  if (habboName !== '' && !savedNames.includes(habboName)) {
+    savedNames.push(habboName);
+    localStorage.setItem('habboNames', JSON.stringify(savedNames));
+    checkStatus(habboName);
+    updateNamesContainer();
+  }
+  input.value = '';
 });
 
-Object.values(cookies.habboUsers.split(',')).forEach(habboName => {
-	fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
-		.then(response => response.json())
-		.then(data => {
-			if (data.online) {
-				showStatus(`${habboName} is online!`, 'online');
-			} else {
-				showStatus(`${habboName} is offline.`, 'offline');
-			}
-		}).catch(error => {
-			showStatus(`An error occurred while checking status. Please try again.`, 'error');
-		});
-});
+function updateNamesContainer() {
+  const namesContainer = document.getElementById('names-container');
+  namesContainer.innerHTML = '';
+
+  savedNames.forEach(name => {
+    const nameDiv = document.createElement('div');
+    nameDiv.textContent = name;
+    namesContainer.appendChild(nameDiv);
+  });
+}
+
+function checkStatus(habboName) {
+  fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.online) {
+        showStatus(`${habboName} is online!`, 'online');
+        sound.play();
+      } else {
+        showStatus(`${habboName} is offline.`, 'offline');
+      }
+    })
+    .catch(error => {
+      showStatus(`An error occurred while checking status. Please try again.`, 'error');
+    });
+}
+
+function startInterval() {
+  setInterval(() => {
+    savedNames.forEach(habboName => {
+      checkStatus(habboName);
+    });
+  }, 15000);
+}
 
 function showStatus(message, status) {
-	const statusDiv = document.createElement('div');
-	statusDiv.textContent = message;
+  const statusDiv = document.createElement('div');
+  statusDiv.textContent = message;
 
-	if (status === 'online') {
-		statusDiv.classList.add('online-status');
-	} else if (status === 'offline') {
-		statusDiv.classList.add('offline-status');
-	} else if (status === 'error') {
-		statusDiv.classList.add('error-status');
-	}
+  if (status === 'online') {
+    statusDiv.classList.add('online-status');
+  } else if (status === 'offline') {
+    statusDiv.classList.add('offline-status');
+  } else if (status === 'error') {
+    statusDiv.classList.add('error-status');
+  }
 
-	form.appendChild(statusDiv);
+  form.appendChild(statusDiv);
 }
 
-function getSavedUsernames() {
-	const cookieValue = document.cookie
-		.split('; ')
-		.find(row => row.startsWith('savedUsernames='))
-		?.split('=')[1];
-	return cookieValue ? cookieValue.split(',') : [];
-}
-
-function saveUsernamesToCookie(usernames) {
-	document.cookie = `savedUsernames=${usernames.join(',')}`;
-}
-
-function watchSavedUsernames() {
-	const savedUsernames = getSavedUsernames();
-	savedUsernames.forEach(username => {
-		fetch(`https://www.habbo.com/api/public/users?name=${username}`)
-			.then(response => response.json())
-			.then(data => {
-				const previousStatus = localStorage.getItem(`${username}-status`);
-				if (data.online && previousStatus !== 'online') {
-					showStatus(`${username} is online!`, 'online');
-					sound.play();
-					localStorage.setItem(`${username}-status`, 'online');
-				} else if (!data.online && previousStatus !== 'offline') {
-					showStatus(`${username} is offline.`, 'offline');
-					localStorage.setItem(`${username}-status`, 'offline');
-				}
-			})
-			.catch(error => {
-				showStatus(`An error occurred while checking status for ${username}. Please try again.`, 'error');
-			});
-	});
-}
-
-function clearSavedUsernames() {
-	saveUsernamesToCookie([]);
-	while (form.lastElementChild) {
-		form.removeChild(form.lastElementChild);
-	}
-}
-
-setInterval(() => {
-	watchSavedUsernames();
-}, 15000);
-
-
-window.onload = function() {
-	watchSavedUsernames();
-}
-
-
-form.addEventListener('submit', (event) => {
-	event.preventDefault();
-	const habboName = input.value.trim();
-	if (habboName === '') {
-		alert('Please enter a valid Habbo name.');
-		return;
-	}
-
-	const savedUsernames = getSavedUsernames();
-	if (savedUsernames.includes(habboName)) {
-		alert('This Habbo name is already being tracked.');
-		return;
-	}
-
-	savedUsernames.push(habboName);
-	saveUsernamesToCookie(savedUsernames);
-
-	fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
-		.then(response => response.json())
-		.then(data => {
-			if (data.online) {
-				showStatus(`${habboName} is online!`, 'online');
-				sound.play();
-			} else {
-				showStatus(`${habboName} is offline.`, 'offline');
-			}
-		})
-		.catch(error => {
-			showStatus(`An error occurred while checking status for ${habboName}. Please try again.`, 'error');
-		});
-
-	input.value = '';
-});
