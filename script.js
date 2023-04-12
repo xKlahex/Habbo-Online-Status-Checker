@@ -139,5 +139,3 @@ form.addEventListener('submit', (event) => {
 
 	input.value = '';
 });
-
-		
