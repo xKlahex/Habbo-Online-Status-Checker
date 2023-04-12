@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,13 +5,13 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<div id="names-container"></div>
 	<div class="form-container">
 		<h2>Enter a Habbo name:</h2>
 		<form id="habbo-form">
 			<input type="text" id="habbo-name" name="habbo-name" placeholder="Enter name here">
 			<button type="submit">Check Status</button>
-<button type="button" id="clear-habbo-names">Clear Names</button>
-
+			<button type="button" id="clear-habbo-names">Clear Names</button>
 		</form>
 	</div>
 
@@ -24,13 +22,19 @@
 	<script>
 const clearNamesBtn = document.getElementById('clear-habbo-names');
 clearNamesBtn.addEventListener('click', (event) => {
-    // clear localStorage
-    localStorage.removeItem('habboNames');
-    // clear savedNames array
-    savedNames = [];
-    // remove all status messages
-    const statusDivs = document.querySelectorAll('.status-message');
-    statusDivs.forEach((div) => div.remove());
+  // clear localStorage
+  localStorage.removeItem('habboNames');
+  // clear savedNames array
+  savedNames = [];
+  // remove all status messages
+  const statusDivs = document.querySelectorAll('.status-message');
+  statusDivs.forEach((div) => div.remove());
+  // update names container
+  updateNamesContainer();
+  // reload page after 0.5 seconds
+  setTimeout(() => {
+    location.reload();
+  }, 100);
 });
 
 		const form = document.getElementById('habbo-form');
@@ -38,27 +42,38 @@ clearNamesBtn.addEventListener('click', (event) => {
 		const sound = document.getElementById('notification-sound');
 		let savedNames = [];
 
-		window.addEventListener('load', () => {
-			if (localStorage.getItem('habboNames')) {
-				savedNames = JSON.parse(localStorage.getItem('habboNames'));
-				savedNames.forEach(habboName => {
-					checkStatus(habboName);
-				});
-			}
-			setTimeout(startInterval, 15000);
-		});
+window.addEventListener('load', () => {
+  if (localStorage.getItem('habboNames')) {
+    savedNames = JSON.parse(localStorage.getItem('habboNames'));
+    savedNames.forEach(habboName => {
+      checkStatus(habboName);
+    });
+    updateNamesContainer();
+  }
+  setTimeout(startInterval, 15000);
+});
 
-		form.addEventListener('submit', (event) => {
-			event.preventDefault();
-			const habboName = input.value.trim();
-			if (habboName !== '' && !savedNames.includes(habboName)) {
-				savedNames.push(habboName);
-				localStorage.setItem('habboNames', JSON.stringify(savedNames));
-				checkStatus(habboName);
-			}
-			input.value = '';
-		});
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const habboName = input.value.trim();
+  if (habboName !== '' && !savedNames.includes(habboName)) {
+    savedNames.push(habboName);
+    localStorage.setItem('habboNames', JSON.stringify(savedNames));
+    checkStatus(habboName);
+    updateNamesContainer();
+  }
+  input.value = '';
+});
+function updateNamesContainer() {
+  const namesContainer = document.getElementById('names-container');
+  namesContainer.innerHTML = '';
 
+  savedNames.forEach(name => {
+    const nameDiv = document.createElement('div');
+    nameDiv.textContent = name;
+    namesContainer.appendChild(nameDiv);
+  });
+}
 
 		function checkStatus(habboName) {
 			fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
@@ -92,91 +107,12 @@ clearNamesBtn.addEventListener('click', (event) => {
 				statusDiv.classList.add('online-status');
 			} else if (status === 'offline') {
 				statusDiv.classList.add('offline-status');
+			} else if (status === 'error') {
+				statusDiv.classList.add('error-status');
 			}
 
 			form.appendChild(statusDiv);
 		}
 	</script>
-
-	<style>
-    body {
-        background-color: #f2f2f2;
-        font-family: Arial, sans-serif;
-    }
-
-    .form-container {
-        background-color: white;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        text-align: center;
-        width: 400px;
-        margin: 0 auto;
-        margin-top: 50px;
-    }
-
-    h2 {
-        color: #444444;
-        margin-bottom: 20px;
-    }
-
-    input[type="text"] {
-        border-radius: 5px;
-        border: 1px solid #dddddd;
-        padding: 10px;
-        width: 100%;
-    }
-
-    button[type="submit"] {
-        background-color: #1abc9c;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        cursor: pointer;
-        margin-top: 10px;
-        padding: 10px 20px;
-        transition: background-color 0.3s ease-in-out;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #148f77;
-    }
-
-    .online-status {
-        background-color: #d1f2eb;
-        border-radius: 5px;
-        color: #155e52;
-        margin-top: 20px;
-        padding: 10px;
-    }
-
-    .offline-status {
-        background-color: #f8d7da;
-        border-radius: 5px;
-        color: #721c24;
-        margin-top: 20px;
-        padding: 10px;
-    }
-
-    .error-status {
-        background-color: #fff3cd;
-        border-radius: 5px;
-        color: #856404;
-        margin-top: 20px;
-        padding: 10px;
-    }
-#clear-habbo-names {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #f44336;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-#clear-names:hover {
-    background-color: #da190b;
-}
-
-</style>
+</body>
+</html>
