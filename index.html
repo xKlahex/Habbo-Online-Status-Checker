@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<div id="names-container"></div>
+	<div id="names-container"></div>
 	<div class="form-container">
 		<h2>Enter a Habbo name:</h2>
 		<form id="habbo-form">
@@ -14,10 +14,17 @@
 			<button type="button" id="clear-habbo-names">Clear Names</button>
 		</form>
 	</div>
-<script src="main.js"></script>
 
 	<audio id="notification-sound">
 		<source src="notification.mp3" type="audio/mpeg">
 	</audio>
+
+	<script src="main.js"></script>
+	<script>
+		window.addEventListener('DOMContentLoaded', () => {
+			const sound = document.getElementById('notification-sound');
+			sound.load();
+		});
+	</script>
 </body>
 </html>
