@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>User Online Status Checker</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-	<div id="names-container">
-		<h3>Your Watchlist</h3>
-		<div id="saved-names"></div>
-	  </div>
-	<div class="form-container">
-		<h2>Enter a Habbo name:</h2>
-		<form id="habbo-form">
-			<input type="text" id="habbo-name" name="habbo-name" placeholder="Enter name here">
-			<button type="submit">Check Status</button>
-			<button type="button" id="clear-habbo-names">Clear Names</button>
-		</form>
-	</div>
-
-	<audio id="notification-sound">
-		<source src="notification.mp3" type="audio/mpeg">
-	</audio>
-
-	<script src="main.js"></script>
-	<script>
-		window.addEventListener('DOMContentLoaded', () => {
-			const sound = document.getElementById('notification-sound');
-			sound.load();
-		});
-	</script>
-</body>
+   <head>
+      <title>User Online Status Checker</title>
+      <link rel="stylesheet" type="text/css" href="style.css">
+   </head>
+   <body>
+      <div id="names-container">
+         <h3>Your Watchlist</h3>
+         <div id="saved-names"></div>
+      </div>
+      <div class="form-container">
+         <h2>Enter a Habbo name:</h2>
+         <form id="habbo-form">
+            <input type="text" id="habbo-name" name="habbo-name" placeholder="Enter name here">
+            <button type="submit">Check Status</button>
+            <button type="button" id="clear-habbo-names">Clear Names</button>
+         </form>
+      </div>
+      <audio id="notification-sound">
+         <source src="notification.mp3" type="audio/mpeg">
+      </audio>
+      <script src="main.js"></script>
+      <script>
+         window.addEventListener('DOMContentLoaded', () => {
+         	const sound = document.getElementById('notification-sound');
+         	sound.load();
+         });
+      </script>
+   </body>
 </html>
