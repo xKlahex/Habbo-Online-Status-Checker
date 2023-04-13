@@ -55,16 +55,27 @@ function checkStatus(habboName) {
   fetch(`https://www.habbo.com/api/public/users?name=${habboName}`)
     .then(response => response.json())
     .then(data => {
-      if (data.online) {
+      const statusDiv = document.querySelector(`[data-name="${habboName}"]`);
+      const previousStatus = statusDiv ? statusDiv.dataset.status : '';
+      if (data.online && previousStatus !== 'online') {
         showStatus(`${habboName} is online!`, 'online');
         sound.play();
-      } else {
+        setStatus(habboName, 'online');
+      } else if (!data.online && previousStatus !== 'offline') {
         showStatus(`${habboName} is offline.`, 'offline');
+        setStatus(habboName, 'offline');
       }
     })
     .catch(error => {
       showStatus(`An error occurred while checking status. Please try again.`, 'error');
     });
+}
+
+function setStatus(habboName, status) {
+  const statusDiv = document.querySelector(`[data-name="${habboName}"]`);
+  if (statusDiv) {
+    statusDiv.dataset.status = status;
+  }
 }
 
 function startInterval() {
@@ -78,6 +89,8 @@ function startInterval() {
 function showStatus(message, status) {
   const statusDiv = document.createElement('div');
   statusDiv.textContent = message;
+  statusDiv.setAttribute('data-name', message.split(' ')[0]);
+  statusDiv.setAttribute('data-status', status);
 
   if (status === 'online') {
     statusDiv.classList.add('online-status');
