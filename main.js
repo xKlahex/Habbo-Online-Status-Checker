@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
     });
     updateNamesContainer();
   }
-  setTimeout(startInterval, 15000);
+  setTimeout(startInterval, 60000);
 });
 
 form.addEventListener('submit', (event) => {
