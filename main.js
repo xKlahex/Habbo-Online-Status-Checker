@@ -86,7 +86,7 @@ function startInterval() {
     savedNames.forEach(habboName => {
       checkStatus(habboName);
     });
-  }, 15000);
+  }, 60000);
 }
 
 function showStatus(message, status) {
