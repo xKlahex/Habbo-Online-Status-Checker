@@ -1,32 +1,58 @@
-body {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+ }
+ 
+ body {
     background-color: #f2f2f2;
     font-family: Arial, sans-serif;
-}
-
-.form-container {
+ }
+ 
+ header {
+    background-color: #1abc9c;
+    color: white;
+    padding: 20px;
+    text-align: center;
+ }
+ 
+ h1 {
+    font-size: 2.5rem;
+    margin: 0;
+ }
+ 
+ main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+ }
+ 
+ .form-container {
     background-color: white;
     border-radius: 5px;
     box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
     width: 400px;
-    margin: 0 auto;
-    margin-top: 50px;
-}
-
-h2 {
+ }
+ 
+ h2 {
     color: #444444;
+    font-size: 1.5rem;
     margin-bottom: 20px;
-}
-
-input[type="text"] {
+ }
+ 
+ input[type="text"] {
     border-radius: 5px;
     border: 1px solid #dddddd;
     padding: 10px;
     width: 100%;
-}
-
-button[type="submit"] {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+ }
+ 
+ button[type="submit"], #clear-habbo-names {
     background-color: #1abc9c;
     border: none;
     border-radius: 5px;
@@ -35,37 +61,38 @@ button[type="submit"] {
     margin-top: 10px;
     padding: 10px 20px;
     transition: background-color 0.3s ease-in-out;
-}
-
-button[type="submit"]:hover {
+    font-size: 1.2rem;
+ }
+ 
+ button[type="submit"]:hover, #clear-habbo-names:hover {
     background-color: #148f77;
-}
-
-.online-status {
+ }
+ 
+ .online-status {
     background-color: #d1f2eb;
     border-radius: 5px;
     color: #155e52;
     margin-top: 20px;
     padding: 10px;
-}
-
-.offline-status {
+ }
+ 
+ .offline-status {
     background-color: #f8d7da;
     border-radius: 5px;
     color: #721c24;
     margin-top: 20px;
     padding: 10px;
-}
-
-.error-status {
+ }
+ 
+ .error-status {
     background-color: #fff3cd;
     border-radius: 5px;
     color: #856404;
     margin-top: 20px;
     padding: 10px;
-}
-
-#clear-habbo-names {
+ }
+ 
+ #clear-habbo-names {
     margin-top: 10px;
     padding: 10px 20px;
     background-color: #f44336;
@@ -74,55 +101,50 @@ button[type="submit"]:hover {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
-}
-
-#clear-habbo-names:hover {
+ }
+ 
+ #clear-habbo-names:hover {
     background-color: #d32f2f;
-}
-#names-container {
+ }
+ 
+ #names-container {
     background-color: #f2f2f2;
     border-radius: 5px;
     box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    margin-top: 20px;
+    padding: 20px;
+    margin-top: 50px;
     text-align: center;
-  }
-  
-  #names-container h3 {
+ }
+ 
+ h3 {
     color: #444444;
-    margin-bottom: 10px;
-  }
-  
-  #saved-names {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .name {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+ }
+ 
+ #saved-names {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+ }
+ 
+ .name {
     background-color: #ffffff;
     border-radius: 5px;
     border: 1px solid #dddddd;
     color: #444444;
-    display: inline-block;
-    margin-bottom: 5px;
+    margin: 5px;
     padding: 5px 10px;
-  }
-  
-  .name:not(:last-child)::after {
+    font-size: 1.2rem;
+ }
+ 
+ .name:not(:last-child)::after {
     content: ", ";
-  }
-
-  .name {
-    background-color: #ffffff;
-    border-radius: 5px;
-    border: 1px solid #dddddd;
-    color: #444444;
-    display: inline-block;
-    margin: 0 5px 5px 0;
-    padding: 5px 10px;
-  }
-  
-  .name:not(:last-child)::after {
-    content: ", ";
-  }
+ }
+ 
+ @media screen and (max-width: 768px) {
+    .form-container {
+       width: 90%;
+    }
+ }
