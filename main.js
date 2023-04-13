@@ -44,14 +44,11 @@ form.addEventListener('submit', (event) => {
 });
 
 function updateNamesContainer() {
-  const namesContainer = document.getElementById('names-container');
+  const namesContainer = document.getElementById('saved-names');
   namesContainer.innerHTML = '';
 
-  savedNames.forEach(name => {
-    const nameDiv = document.createElement('div');
-    nameDiv.textContent = name;
-    namesContainer.appendChild(nameDiv);
-  });
+  const namesList = savedNames.join(', ');
+  namesContainer.textContent = namesList;
 }
 
 function checkStatus(habboName) {
@@ -92,4 +89,3 @@ function showStatus(message, status) {
 
   form.appendChild(statusDiv);
 }
-
