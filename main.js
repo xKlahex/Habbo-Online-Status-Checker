@@ -1,15 +1,18 @@
 const clearNamesBtn = document.getElementById('clear-habbo-names');
 clearNamesBtn.addEventListener('click', (event) => {
-  // clear localStorage
+
   localStorage.removeItem('habboNames');
-  // clear savedNames array
+
   savedNames = [];
-  // remove all status messages
+
   const statusDivs = document.querySelectorAll('.status-message');
   statusDivs.forEach((div) => div.remove());
-  // update names container
+
+  const statusUpdates = document.getElementById('status-updates');
+  statusUpdates.innerHTML = '';
+
   updateNamesContainer();
-  // reload page after 0.5 seconds
+
   setTimeout(() => {
     location.reload();
   }, 100);
@@ -100,5 +103,6 @@ function showStatus(message, status) {
     statusDiv.classList.add('error-status');
   }
 
-  form.appendChild(statusDiv);
+  const statusUpdates = document.getElementById('status-updates');
+  statusUpdates.insertBefore(statusDiv, statusUpdates.firstChild);
 }
